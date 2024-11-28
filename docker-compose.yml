@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+    db:
+        image: postgres:14.5
+        restart: on-failure
+        expose:
+            - 5432
+        ports:
+            - "5987:5432"
+        volumes:
+            - ./dbs/postgres-data:/var/lib/postgresql/data
+        env_file:
+            - ./bot/.env
+
+    redis:
+        image: redis:7.0.4
+        restart: always
+        command: redis-server --appendonly yes --replica-read-only no
+        expose:
+            - 6379
+        ports:
+            - "7437:6379"
+        volumes:
+            - ./dbs/redis-data:/data/
+
+    bot:
+        build: ./bot
+        container_name: reviewer_bot
+        restart: always
+        expose:
+            - 3001
+        ports:
+            - "3001:3001"
+            - "9091:9091"
+        depends_on:
+            - db
+            - redis
+        volumes:
+            - ./bot:/bot
+        command: bash -c "
+            alembic upgrade head &&
+            python3 main.py"
+        env_file:
+            - ./bot/.env
+
+    admin:
+        container_name: admin
+        expose:
+            - 8010
+        ports:
+            - 8010:8010
+        build: ./bot
+        depends_on:
+            - db
+        env_file:
+            - ./bot/.env
+        volumes:
+            - ./bot:/bot
+        restart: always
+        command: bash -c "
+          alembic upgrade head &&
+          uvicorn main:app --forwarded-allow-ips='*' --proxy-headers --host 0.0.0.0 --port 8010"
+
+
+volumes:
+  bot:

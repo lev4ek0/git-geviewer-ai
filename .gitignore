@@ -1,0 +1,36 @@
+.DS_Store
+node_modules
+/dist
+/dbs
+__pycache__/
+
+media
+
+sources
+# local env files
+bot/.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+debug.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Vim files
+*~
+*.swp
+
+.venv/
+venv
