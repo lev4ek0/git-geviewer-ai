@@ -3,12 +3,15 @@ from io import BytesIO
 
 from aiogram import Bot, F, Router, types
 from aiogram.types import ContentType
+from database.connection import PostgresConnection
 from services.review import (
     ALLOWED_LANGUAGES,
     _create_pdf_from_template,
+    create_report,
     determine_language,
     handle_file,
 )
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = Router()
 
@@ -25,7 +28,9 @@ async def download_document(bot: Bot, file_id: str) -> BytesIO:
 
 
 @router.message(F.content_type == ContentType.DOCUMENT)
-async def handle_document(message: types.Message, bot: Bot):
+async def handle_document(
+    message: types.Message, bot: Bot, session: PostgresConnection
+):
     document = message.document
 
     is_file = determine_language(document.file_name) in ALLOWED_LANGUAGES
@@ -37,9 +42,16 @@ async def handle_document(message: types.Message, bot: Bot):
                     file_bytes, is_file, document.file_name, tmpdirname
                 )
 
+                report = create_report(response, tmpdirname, pdf)
+                repord_link = f"https://lev-4-ek.ru/api/review/{report.id}"
+
+                async with AsyncSession(session.engine) as async_session:
+                    async_session.add(report)
+                    await async_session.commit()
+
                 await message.answer_document(pdf)
                 # await message.answer(str(response.model_dump()))
-                await message.answer(language)
+                await message.answer(repord_link)
 
         except Exception as e:
             await message.reply(f"Ошибка при конвертации")

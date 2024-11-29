@@ -16,6 +16,8 @@ class LineSchema(BaseModel):
 class CodeCommentSchema(BaseModel):
     title: str = Field(description="Название раздела")
     lines: list[LineSchema]
+    start_string_number: int = Field(description="Номер строки (начало)")
+    end_string_number: int = Field(description="Номер строки (конец)")
     filepath: str = Field(description="Путь до файла")
     comment: str = Field(description="Комментарий к участку кода")
     suggestion: str = Field(description="Рекомендации по исправлению", default=None)
