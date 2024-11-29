@@ -2,26 +2,411 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Отчёт по репозиторию: name</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+	
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Roboto;
+        margin: 0;
+        color: #00141f;
+      }
+      main {
+        background-color: #e9f8ff;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0;
+        margin-top: 16px;
+      }
+      ul {
+        margin: 0;
+        list-style: none;
+        padding-left: 24px;
+        padding-top: 4px;
+      }
+      li {
+        font-weight: 300;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+      .bold {
+        font-weight: 600;
+      }
+      .medium {
+        font-weight: 500;
+      }
+      .light {
+        font-weight: 300;
+      }
+      .flex {
+        display: flex;
+      }
+      .column {
+        flex-direction: column;
+      }
+      .text-s {
+        font-size: 12px;
+      }
+      .text-m {
+        font-size: 14px;
+      }
+      .text-l {
+        font-size: 16px;
+      }
+      .text-xl {
+        font-size: 24px;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .align-center {
+        align-items: center;
+      }
+      p {
+        margin: 0;
+      }
+      .subtext {
+        font-size: 12px;
+        color: #00141f66;
+      }
+      .comment-container {
+        background: #f5fcff;
+        padding: 16px;
+		width: fit-content;
+		margin-bottom: 16px;
+        position: relative;
+        border-radius: 24px;
+      }
+      .comment-container:before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 13px;
+        width: 0;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-right: 13px solid #f5fcff;
+        border-bottom: 12px solid transparent;
+        border-radius: 10px;
+      }
+      .overview {
+        margin: 16px 0;
+		margin-top: 24px;
+      }
+      .comment-code {
+        background: #f5fcff;
+        padding: 16px;
+        border-radius: 24px;
+		margin-bottom: 16px;
+      }
+      .comment-container-blue {
+		width: fit-content;
+        background: #c3e6f7;
+        padding: 16px;
+        position: relative;
+        border-radius: 24px;
+      }
+      .comment-container-blue::before {
+        border-right: 13px solid #c3e6f7;
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 13px;
+        width: 0;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-radius: 10px;
+      }
+      .code {
+        border-left: solid #c3e6f7 4px;
+        padding: 8px 16px;
+        margin: 24px 0;
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 16px;
+        color: #00141f;
+      }
+      svg {
+        margin-right: 4px;
+      }
+      .code-green {
+        border-left: solid #d0fff4 4px;
+        padding: 8px 16px;
+        margin: 16px 0;
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 16px;
+        color: #00141f;
+      }
+	  .prettyprint.prettyprinted {
+		border: none!important;
+	  }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <div style="background-color: red; height: 700px;">
-      <p>Крутые</p>
-      <p>бобры</p>
-    </div>
+    <main class="flex column">
+      <!--logo-->
+      <div class="logo">
+        <svg width="120" height="32" viewBox="0 0 206 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<g clip-path="url(#clip0_37_1386)">
+			<path d="M32.1851 0.000999451H0V6.39807H32.1851V0.000999451Z" fill="#FBB92F"/>
+			<path d="M32.1851 12.7942H0V19.1913H32.1851V12.7942Z" fill="#EE7918"/>
+			<path d="M32.1851 25.5884H0V31.9856H32.1851V25.5884Z" fill="#E42213"/>
+			<path d="M157.256 6.40314L162.34 19.1848H152.158L157.256 6.40314ZM152.324 0.00362396L139.968 31.9891H147.347L149.764 25.5777L164.749 25.584L167.165 31.9891H174.504L161.431 0.00362396H152.324Z" fill="black"/>
+			<path d="M45.0557 0.00362396V31.9891H71.4619V25.5961L51.5107 25.585V19.1918H71.4619V12.7823H51.5107V6.40538L71.4619 6.38395V0.00362396H45.0557Z" fill="black"/>
+			<path d="M178.965 31.9637H191.445H196.398C201.596 31.9637 205.999 28.452 205.999 22.4698C205.999 20.0042 205.047 17.585 202.077 15.9837C205.515 13.9952 205.999 11.9632 205.999 9.49766C205.999 4.29389 201.596 0.00362396 196.398 0.00362396H191.445H178.965V6.50849H196.098C197.847 6.50849 199.264 7.91719 199.264 9.65494C199.264 11.3927 197.847 12.8015 196.098 12.8015H192.677H182.175V19.1658H192.677H196.098C197.847 19.1658 199.264 20.5746 199.264 22.3123C199.264 24.05 197.847 25.4588 196.098 25.4588H178.965V31.9637H178.965Z" fill="black"/>
+			<path d="M131.067 0.00362396H126.114H113.313V31.9891H119.753V19.1659H127.347H131.067C136.392 19.1659 140.708 14.8763 140.708 9.58478C140.708 4.29325 136.392 0.00362396 131.067 0.00362396ZM130.767 12.8015H119.744V6.50849H130.767C132.516 6.50849 133.933 7.91719 133.933 9.65494C133.933 11.3927 132.516 12.8015 130.767 12.8015Z" fill="black"/>
+			<path d="M102.485 15.9837C105.923 13.9952 106.407 11.9632 106.407 9.49766C106.407 4.29389 102.003 0.00362396 96.8054 0.00362396L96.8056 0.00373059C96.8041 0.00373059 96.8029 0.00362396 96.8015 0.00362396H79.2079V31.9637H97.1233C102.321 31.9637 106.725 28.452 106.725 22.4698C106.725 20.0042 105.455 17.5851 102.485 15.9837ZM85.6394 6.50849H96.5016C98.2502 6.50849 99.6676 7.91719 99.6676 9.65494C99.6676 11.3927 98.2502 12.8015 96.5016 12.8015H93.2417H85.6394V6.50849ZM96.8235 25.4588H85.6394V19.1658H96.8234C98.5721 19.1658 99.9895 20.5746 99.9895 22.3123C99.9895 24.05 98.5721 25.4588 96.8235 25.4588Z" fill="black"/>
+			</g>
+			<defs>
+			<clipPath id="clip0_37_1386">
+			<rect width="206" height="32" fill="white"/>
+			</clipPath>
+			</defs>
+		</svg>			
+      <!--header-->
+      <h1 class="bold">Анализ проекта Evraz-landing от 01.02.2024</h1>
+      <!--date-->
+      <div class="flex align-center" style="margin-top: 4px">
+        <svg width="14px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M16.7502 3.56V2C16.7502 1.59 16.4102 1.25 16.0002 1.25C15.5902 1.25 15.2502 1.59 15.2502 2V3.5H8.75023V2C8.75023 1.59 8.41023 1.25 8.00023 1.25C7.59023 1.25 7.25023 1.59 7.25023 2V3.56C4.55023 3.81 3.24023 5.42 3.04023 7.81C3.02023 8.1 3.26023 8.34 3.54023 8.34H20.4602C20.7502 8.34 20.9902 8.09 20.9602 7.81C20.7602 5.42 19.4502 3.81 16.7502 3.56Z"
+            fill="#00141F66"
+          />
+          <path
+            d="M20 9.83984H4C3.45 9.83984 3 10.2898 3 10.8398V16.9998C3 19.9998 4.5 21.9998 8 21.9998H16C19.5 21.9998 21 19.9998 21 16.9998V10.8398C21 10.2898 20.55 9.83984 20 9.83984ZM14.84 14.9898L14.34 15.4998H14.33L11.3 18.5298C11.17 18.6598 10.9 18.7998 10.71 18.8198L9.36 19.0198C8.87 19.0898 8.53 18.7398 8.6 18.2598L8.79 16.8998C8.82 16.7098 8.95 16.4498 9.08 16.3098L12.12 13.2798L12.62 12.7698C12.95 12.4398 13.32 12.1998 13.72 12.1998C14.06 12.1998 14.43 12.3598 14.84 12.7698C15.74 13.6698 15.45 14.3798 14.84 14.9898Z"
+            fill="#00141F66"
+          />
+        </svg>
+        <p class="subtext">Дата последнего изменения проекта: 01.02.2024</p>
+      </div>
+      <!--overview-->
+      <div class="overview">
+        <div class="flex align-center">
+          <svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="#00141f"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3.559 4.544c.355-.35.834-.544 1.33-.544H19.11c.496 0 .975.194 1.33.544.356.35.559.829.559 1.331v9.25c0 .502-.203.981-.559 1.331-.355.35-.834.544-1.33.544H15.5l-2.7 3.6a1 1 0 0 1-1.6 0L8.5 17H4.889c-.496 0-.975-.194-1.33-.544A1.868 1.868 0 0 1 3 15.125v-9.25c0-.502.203-.981.559-1.331ZM7.556 7.5a1 1 0 1 0 0 2h8a1 1 0 0 0 0-2h-8Zm0 3.5a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2H7.556Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <p class="medium">Замечаний: <span class="bold">5555</span></p>
+        </div>
+        <div>
+          <ul>
+            <li>Архитектурные особенности: <span class="medium">41</span></li>
+            <li>Архитектурные особенности: <span class="medium">2</span></li>
+            <li>Архитектурные особенности: <span class="medium">3</span></li>
+          </ul>
+        </div>
+      </div>
+      <!--comments container-->
+      <div class="flex column">
+        <h3>Архитектурные особенности</h3>
+        <div class="comment-container flex">
+          <div style="width: 24px; margin-right: 8px">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="#00141f"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </div>
+          <p style="margin-top: 2px">
+            Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
+          </p>
+        </div>
+        <div class="comment-container flex">
+          <div style="width: 24px; margin-right: 8px">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="#00141f"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </div>
+          <p style="margin-top: 2px">
+            Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
+          </p>
+        </div>
+        <!--comment with code-->
+        <div class="flex column comment-code">
+          <div class="flex align-center" style="margin-bottom: 24px">
+            <svg
+              class="w-6 h-6 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"
+              />
+            </svg>
+            <p class="medium">../src/File/File.tsx</p>
+          </div>
+          <div class="comment-container-blue flex">
+            <div style="width: 24px; margin-right: 8px">
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="#00141f"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                />
+              </svg>
+            </div>
+            <p style="margin-top: 2px">
+              Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
+            </p>
+          </div>
+          <div class="code">kodkodkodkodkodkodkodkod</div>
+		  <p>Предложенные изменения</p>
+          <div class="code-green"><code class="prettyprint" style="white-space: pre-line">
+			from pydantic import BaseModel, Field
 
-    <div style="background-color: yellow; height: 700px; margin-top: 40px;">
-      <p>Крутые</p>
-      <p>бобры</p>
-    </div>
+
+			class CodeComment(BaseModel):
+    			title: str = Field(description="Название раздела")
+    			start_string_number: int = Field(description="Номер строки (начало)")
+    			end_string_number: int = Field(description="Номер строки (конец)")
+    			filepath: str = Field(description="Путь до файла")
+    			comment: str = Field(description="Комментарий к участку кода")
+    			suggestion: str = Field(description="Рекомендации по исправлению", default=None)
+
+
+			class ProjectComment(BaseModel):
+    			title: str = Field(description="Название раздела")
+    			comment: str = Field(description="Комментарий")
+
+
+			class OutputJson(BaseModel):
+    			titles: list[str] = Field(description="Список возможных разделов, к которым относятся комментарии")
+    			code_comments: list[CodeComment]
+    			project_comments: list[ProjectComment]
+			</code>
+			</div>
+        </div>
+		<div class="flex column comment-code">
+			<div class="flex align-center" style="margin-bottom: 24px">
+			  <svg
+				class="w-6 h-6 text-gray-800 dark:text-white"
+				aria-hidden="true"
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				fill="none"
+				viewBox="0 0 24 24"
+			  >
+				<path
+				  stroke="currentColor"
+				  stroke-linejoin="round"
+				  stroke-width="2"
+				  d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"
+				/>
+			  </svg>
+			  <p class="medium">../src/File/File.tsx</p>
+			</div>
+			<div class="comment-container-blue flex">
+			  <div style="width: 24px; margin-right: 8px">
+				<svg
+				  class="w-6 h-6 text-gray-800 dark:text-white"
+				  aria-hidden="true"
+				  xmlns="http://www.w3.org/2000/svg"
+				  width="24"
+				  height="24"
+				  fill="none"
+				  viewBox="0 0 24 24"
+				>
+				  <path
+					stroke="#00141f"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+				  />
+				</svg>
+			  </div>
+			  <p style="margin-top: 2px">
+				Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
+			  </p>
+			</div>
+			<div class="code">kodkodkodkodkodkodkodkod</div>
+			<p>Предложенные изменения</p>
+			<div class="code-green"><code class="prettyprint" style="white-space: pre-line">
+				import { FC } from 'react';
+				import { BrowserRouter, Route, Routes } from 'react-router-dom';
+				import { AppRoutes } from './routes';
+				import Home from '@pages/Home/Home';
+				
+				export const AppRouter: FC = () => {
+				  return (
+					<BrowserRouter>
+					  <Routes>
+						<Route path={AppRoutes.Home} element={<Home />}></Route>
+					  </Routes>
+					</BrowserRouter>
+				  );
+				};
+				
+			  </code>
+			  </div>
+		  </div>
+      </div>
+    </main>
   </body>
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 </html>

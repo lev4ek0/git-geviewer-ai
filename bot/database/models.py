@@ -1,5 +1,9 @@
+from typing import Any
+from uuid import UUID
+
 from database.connection import Base
 from sqlalchemy import ForeignKey, String
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
@@ -42,3 +46,11 @@ class History(Base):
     @property
     def name(self):
         return self.user.full_name
+
+
+class Report(Base):
+    __tablename__ = "reports"
+    id: Mapped[UUID] = mapped_column(primary_key=True, index=True)
+    pdf_file_path: Mapped[str] = mapped_column(String)
+    ml_response: Mapped[dict[str, Any]] = mapped_column(JSONB)
+    frontend_response: Mapped[dict[str, Any]] = mapped_column(JSONB)

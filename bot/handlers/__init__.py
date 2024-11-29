@@ -1,4 +1,5 @@
 from aiogram import Router
+from handlers.process_file import router as process_file_router
 from handlers.start import router as start_router
 from middleware import (
     ErrorsMiddleware,
@@ -12,6 +13,7 @@ session_middleware = SessionMiddleware()
 
 router = Router()
 router.include_routers(start_router)
+router.include_routers(process_file_router)
 
 
 router.message.middleware(session_middleware)

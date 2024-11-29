@@ -6,9 +6,9 @@ from admin.admin import admin_router
 from admin.auth import admin_auth_backend
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
+from api import review_router
 from database import engine, postgres_connection, redis_connection
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from handlers import router as all_routers
 from prometheus_client import start_http_server
 from settings import bot_settings, redis_settings
@@ -21,11 +21,15 @@ async def on_startup():
 
 app = FastAPI(
     title="Admin",
+    openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
 )
 admin = MyAdmin(
     app, engine, base_url="/admin-auth", authentication_backend=admin_auth_backend
 )
 admin.include_router(admin_router)
+app.include_router(review_router, prefix="/api")
 
 
 async def main():

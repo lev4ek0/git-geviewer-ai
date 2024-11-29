@@ -1,11 +1,14 @@
 from datetime import datetime
+from typing import Annotated, AsyncGenerator
 
+from fastapi import Depends
 from redis.client import Redis
 from settings import SQLALCHEMY_ORM_CONFIG, redis_settings
 from sqlalchemy import DateTime, func
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
     AsyncConnection,
+    AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
@@ -93,3 +96,17 @@ class Base(AsyncAttrs, DeclarativeBase):
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__} ({self.id})"
+
+
+async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
+
+
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    async_session: AsyncSession = async_session_factory()  # type: ignore
+    try:
+        yield async_session
+    finally:
+        await async_session.close()
+
+
+Session = Annotated[AsyncSession, Depends(get_async_session)]

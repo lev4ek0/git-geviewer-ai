@@ -29,6 +29,8 @@ debug.log
 *.sw?
 
 # Vim files
+bot/reports/*
+!bot/reports/README.md
 *~
 *.swp
 
