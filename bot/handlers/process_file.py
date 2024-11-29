@@ -44,7 +44,6 @@ async def handle_document(message: types.Message, bot: Bot):
         except Exception as e:
             await message.reply(f"Ошибка при конвертации")
     elif document.file_name.endswith("html"):
-        # try:
         file_bytes = await download_document(bot, document.file_id)
         with tempfile.TemporaryDirectory() as tmpdirname:
             with open(f"{tmpdirname}/1.html", "wb") as f:
