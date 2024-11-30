@@ -3,19 +3,22 @@ from pathlib import Path
 
 from layer_classifier import LayerClassifier 
 from files_parser import FilesParser
-from code_layer_matcher import CodeLayerMatcher, CodeLayerMatchResult
+from code_analyzer import CodeAnalyzer, CodeAnalyzerCommentResult
 from logging_checker import LoggingChecker, ListLoggingCheckerOutput
 from reqs_match import ReqsMatcher
 from schemas import OutputJson, ProjectComment, CodeComment
 
 
-DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master\alembic"
+#DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master\alembic"
+DATA_PATH = r'/home/artem/work/programming/codereview_hack/example_projects/python/backend-master/backend-master'
 
 
 type_to_title = {
-    CodeLayerMatchResult: "Архитектурные ошибки",
-    ListLoggingCheckerOutput: "Логирование",
-    str: "Недопустимые зависимости"
+    'reqs_match': "Недопустимые зависимости",
+    'architecture': "Архитектурные ошибки",
+    'logging': "Логирование",
+    'auth': "Аутентификация и авторизация",
+    'data': "Работа с данными"
 }
 
 
@@ -36,7 +39,7 @@ class CodeReviewer:
         output_results = []
         for result in results:
             output_results += [
-                CodeComment(title=type_to_title[type(result)],
+                CodeComment(title=type_to_title[x.type],
                             filepath=str(path_to_file),
                             start_string_number=x.start_line_number,
                             end_string_number=x.end_line_number,
@@ -52,7 +55,7 @@ class CodeReviewer:
 
         results = []
         for validator in self.scripts_validators:
-            if isinstance(validator, CodeLayerMatcher):
+            if isinstance(validator, CodeAnalyzer):
                 
                 result = validator.invoke(contents, layer_name, str(relative_path))
             else:
@@ -73,7 +76,7 @@ class CodeReviewer:
         classes = self.layer_classifier.invoke(project_structure)
         project_comments = []
         if reqs:
-            project_comments.append(ProjectComment(title=type_to_title[type(reqs)], comment=reqs))
+            project_comments.append(ProjectComment(title=type_to_title[reqs.type], comment=reqs.comment))
 
         project_structure = {k: project_structure[k] for k in classes}
         scripts = [(path / x, classes[path]) for path in project_structure for x in project_structure[path]]
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
 
     reviewer = CodeReviewer(FilesParser(), LayerClassifier(llm), ReqsMatcher(),
-                            scripts_validators=[CodeLayerMatcher(llm), LoggingChecker(llm)])
+                            scripts_validators=[CodeAnalyzer(llm), LoggingChecker(llm)])
     result = reviewer.invoke(DATA_PATH)
     print(result)
 

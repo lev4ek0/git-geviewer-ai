@@ -14,6 +14,7 @@ DATA_PATH = Path(r"D:\\ITMO\\hacks\\llm_review\\python\\backend-master\\alembic\
 
 
 class LoggingCheckerOutput(BaseModel):
+    type: str = Field(default="logging")
     start_line_number: int = Field(description="Начало участка кода где есть ошибка (номер строки)")
     end_line_number: int = Field(description="Конец участка кода где есть ошибка (номер строки)")
     comment: str = Field(description="Перечисление всех ошибок в этом участке кода")
