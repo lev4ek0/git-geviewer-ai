@@ -64,25 +64,29 @@ async def _create_pdf_from_template(
     for comment in itertools.chain(response.code_comments, response.project_comments):
         title_remarks[comment.title].append(comment)
 
+    sorted_title_remarks = sorted(
+        title_remarks.items(), key=lambda item: response.titles.index(item[0])
+    )
+
     render_context = {
         "name": filename,
         "date": formatted_date,
         "total_remarks": len(response.code_comments) + len(response.project_comments),
         "title_remarks": [
-            [title, len(remarks)] for title, remarks in title_remarks.items()
+            [title.replace("\n", "&#10;"), len(remarks)] for title, remarks in sorted_title_remarks
         ],
         "title_infos": [
             [
                 title,
                 [
-                    remark.comment
+                    remark.comment.replace("\n", "&#10;")
                     for remark in remarks
                     if not hasattr(remark, "suggestion")
                 ],
                 [
                     [
                         remark.filepath,
-                        remark.comment,
+                        remark.comment.replace("\n", "&#10;"),
                         "".join(
                             [
                                 line.text.replace("<", "&lt;").replace(" ", "&nbsp;")
@@ -100,7 +104,7 @@ async def _create_pdf_from_template(
                     if hasattr(remark, "suggestion")
                 ],
             ]
-            for title, remarks in title_remarks.items()
+            for title, remarks in sorted_title_remarks
         ],
     }
     print(render_context)
@@ -125,6 +129,8 @@ async def handle_file(
         language = _unpack_zip_to_tmp(file_bytes, tmpdirname)
 
     response = await get_ml_response(tmpdirname, language)
+    if response is None:
+        return None, None, None, None
     frontend_response, ml_response = create_report(filename, response, tmpdirname)
 
     random_uuid = uuid4()
@@ -151,10 +157,11 @@ def create_report(filename: str, response: OutputJson, tmpdirname: str) -> Repor
     for index, code_comment in enumerate(response.code_comments):
         try:
             with open(
-                f"{tmpdirname}/{filename.replace('.zip', '')}/{code_comment.filepath}",
+                f"{tmpdirname}/{code_comment.filepath}",
                 "r",
             ) as f:
                 lines = f.readlines()
+
                 first_number = max(1, code_comment.start_string_number)
                 last_number = min(len(lines), code_comment.end_string_number)
                 first_index = max(
@@ -170,10 +177,32 @@ def create_report(filename: str, response: OutputJson, tmpdirname: str) -> Repor
                 for i, line in enumerate(window_lines)
             ]
         except Exception:
-            frontend_response["code_comments"][index]["lines"] = [
-                {
-                    "order": 1,
-                    "text": "",
-                }
-            ]
+            try:
+                with open(
+                    f"{code_comment.filepath}",
+                    "r",
+                ) as f:
+                    lines = f.readlines()
+
+                    first_number = max(1, code_comment.start_string_number)
+                    last_number = min(len(lines), code_comment.end_string_number)
+                    first_index = max(
+                        0, first_number - 1 - bot_settings.TOTAL_LINES_UP_DOWN
+                    )
+                    last_index = min(
+                        len(lines) - 1, last_number + 2 + bot_settings.TOTAL_LINES_UP_DOWN
+                    )
+                    window_lines = lines[first_index:last_index]
+
+                frontend_response["code_comments"][index]["lines"] = [
+                    {"order": i + first_index + 1, "text": line}
+                    for i, line in enumerate(window_lines)
+                ]
+            except Exception:
+                frontend_response["code_comments"][index]["lines"] = [
+                    {
+                        "order": 1,
+                        "text": "",
+                    }
+                ]
     return frontend_response, ml_response

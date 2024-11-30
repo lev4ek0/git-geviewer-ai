@@ -40,8 +40,10 @@ async def handle_document(
             pdf, language, response, report = await handle_file(
                 file_bytes, is_file, document.file_name, tmpdirname
             )
+            if pdf is None:
+                await message.answer("Извините, мы поддерживаем только python")
 
-            repord_link = f"{bot_settings.BASE_API_URL}/api/review/{report.id}"
+            repord_link = f"{bot_settings.BASE_API_URL}/{report.id}"
 
             async with AsyncSession(session.engine) as async_session:
                 async_session.add(report)

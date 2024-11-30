@@ -281,8 +281,8 @@
         </h3>
         {% endif %}
         {% if title_info[1] %}
+        {% for title_project_comment in title_info[1] %}
         <div class="comment-container flex">
-          {% for title_project_comment in title_info[1] %}
           <div style="width: 24px; margin-right: 8px">
             <svg
               class="w-6 h-6 text-gray-800 dark:text-white"
@@ -303,8 +303,8 @@
             </svg>
           </div>
           <p style="margin-top: 2px">{{ title_project_comment }}</p>
-          {% endfor %}
         </div>
+        {% endfor %}
         {% endif %}
         {% for title_code_comment in title_info[2] %}
         <div class="flex column comment-code">

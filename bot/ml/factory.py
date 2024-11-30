@@ -1,5 +1,12 @@
 from pathlib import Path
 
+from ml.code_analyzer import CodeAnalyzer
+from ml.code_reviewer import CodeReviewer
+from ml.files_parser import FilesParser
+from ml.layer_classifier import LayerClassifier
+from ml.logging_checker import LoggingChecker
+from ml.project_structure_analyzer import ProjectStructureAnalyzer
+from ml.reqs_match import ReqsMatcher
 from schemas.ml import CodeComment, OutputJson, ProjectComment
 
 
@@ -87,13 +94,22 @@ json = {
 }
 
 
-async def get_ml_response(path: str, language: str) -> OutputJson:
-    print(language)
-    list_files_in_directory(path)
-    # code_comments = [
-    #     create_code_comment(x, i) for x in range(1, 5) for i in range(1, 4)
-    # ]
+async def get_ml_response(path: str, language: str) -> OutputJson | None:
+    if language != "py":
+        return None
 
-    # project_comments = [create_project_comment(x) for x in range(1, 5)]
+    from ml.llms import LLMFactory
 
-    return OutputJson(**json)
+    llm = LLMFactory.get_llm("mistral-nemo-instruct-2407")
+
+    reviewer = CodeReviewer(
+        FilesParser(),
+        LayerClassifier(llm),
+        ProjectStructureAnalyzer(llm),
+        ReqsMatcher(),
+        scripts_validators=[CodeAnalyzer(llm), LoggingChecker(llm)],
+    )
+    EXTENSION = ".py"
+    result = reviewer.invoke(path, EXTENSION)
+
+    return result
