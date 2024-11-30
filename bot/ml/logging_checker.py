@@ -10,7 +10,7 @@ from utils import add_line_numbers
 from llms import LLMFactory
 
 
-DATA_PATH = Path(r"D:\ITMO\hacks\llm_review\test_project\src\test\test.py")
+DATA_PATH = Path(r"D:\\ITMO\\hacks\\llm_review\\python\\backend-master\\alembic\\versions\\06a043f2516a_initial.py")
 
 
 class LoggingCheckerOutput(BaseModel):
@@ -21,7 +21,7 @@ class LoggingCheckerOutput(BaseModel):
 
 
 class ListLoggingCheckerOutput(BaseModel):
-    errors: List[LoggingCheckerOutput] = Field(description="Список ошибок найденных в коде")
+    comments: List[LoggingCheckerOutput] = Field(description="Список ошибок найденных в коде")
 
 
 LOGGING_CHECKER_PROMPT = """
@@ -72,6 +72,7 @@ datefmt = '%Y-%m-%d %H:%M:%S'
 {format_instructions}
 
 ЗАПРЕЩЕНО ДУБЛИРОВАТЬ. Если в коде встречается несколько ошибок, то ты должен вывести их все в нужном формате.
+ВАЖНО! Если в коде не встречается никаких print и logging, то просто выводи comments пустым списком.
 
 ## Приступим
 SCRIPT:
@@ -85,16 +86,18 @@ class LoggingChecker:
         self._parser_instructions = parser.get_format_instructions()
         self._chain = PromptTemplate.from_template(prompt) | llm | parser
 
-    def invoke(self, path_to_script: Path):
-        with open(path_to_script, "r", encoding="utf8") as py_script:
-            script_content = add_line_numbers(py_script.read())
-        llm_answer = self._chain.invoke({"script_content": script_content, "format_instructions": self._parser_instructions})
-        return llm_answer
+    def invoke(self, script_content: str):
+        with_lines = add_line_numbers(script_content)
+        llm_answer = self._chain.invoke({"script_content": with_lines, "format_instructions": ListLoggingCheckerOutput.model_json_schema()})
+        return ListLoggingCheckerOutput.model_validate(llm_answer)
 
 
 if __name__ == "__main__":
     llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
 
     checker = LoggingChecker(llm)
-    result = checker.invoke(DATA_PATH)
+    with open(DATA_PATH, "r", encoding="utf-8") as f:
+        contents = f.read()
+
+    result = checker.invoke(contents)
     print(result)

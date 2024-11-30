@@ -7,7 +7,7 @@ class CodeComment(BaseModel):
     end_string_number: int = Field(description="Номер строки (конец)")
     filepath: str = Field(description="Путь до файла")
     comment: str = Field(description="Комментарий к участку кода")
-    suggestion: str = Field(description="Рекомендации по исправлению", default=None)
+    suggestion: str | None = Field(description="Рекомендации по исправлению", default=None)
 
 
 class ProjectComment(BaseModel):

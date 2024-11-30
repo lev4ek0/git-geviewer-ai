@@ -10,8 +10,8 @@ from llms import LLMFactory
 
 
 class CodeLayerMatchComment(BaseModel):
-    start_string_number: int = Field(description="Номер строки (начало участка кода)")
-    end_string_number: int = Field(description="Номер строки (конец участка кода)")
+    start_line_number: int = Field(description="Номер строки (начало участка кода)")
+    end_line_number: int = Field(description="Номер строки (конец участка кода)")
     comment: str = Field(
         description="Комментарий к участку кода и то, куда его надо перенести"
     )
@@ -67,14 +67,12 @@ class CodeLayerMatcher:
         self._chain = PromptTemplate.from_template(prompt) | llm | output_parser
 
     def invoke(
-        self, project_path: str, layer_name: str, file_relative_path: str
+        self, script_content: str, layer_name: str, file_relative_path: str
     ) -> CodeLayerMatchResult:
-        with open(os.path.join(project_path, file_path), "r") as f:
-            file_content = f.read()
-        file_content = utils.add_line_numbers(file_content)
+        file_content = utils.add_line_numbers(script_content)
 
-        tree_generator = utils.DirectoryTreeGenerator(project_path)
-        tree_str = tree_generator.get_tree()
+        # tree_generator = utils.DirectoryTreeGenerator(project_path)
+        # tree_str = tree_generator.get_tree()
         
         try:
             ai_msg = self._chain.invoke(
@@ -101,11 +99,15 @@ if __name__ == "__main__":
     # layer_name = "core"
     # file_path = "gramps_webapi/api/emails.py"
 
-    project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/donna-backend-master/donna-backend-master"
+    # project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/donna-backend-master/donna-backend-master"
+    project_path = r"D:\ITMO\hacks\llm_review\python\donna-backend-master"
     layer_name = "adapters"
     file_path = "app/services/user_services.py"
 
+    with open(os.path.join(project_path, file_path), "r") as f:
+        file_content = f.read()
+
     node = CodeLayerMatcher(llm)
-    result = node.invoke(project_path, layer_name, file_path)
+    result = node.invoke(file_content, layer_name, file_path)
 
     print(result)

@@ -7,9 +7,10 @@ from langchain_core.output_parsers import StrOutputParser, BaseOutputParser
 from langchain_core.prompts import PromptTemplate
 
 from files_parser import FilesParser
+from llms import LLMFactory
 
 
-DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master"
+DATA_PATH = r"D:\ITMO\hacks\llm_review\test_project"
 
 
 LAYER_CLASSIFIER_PROMPT = """
@@ -39,13 +40,26 @@ LAYER_CLASSIFIER_PROMPT = """
 внедряются зависимости. Чаще всего здесь находятся файлы `settings.py`
 4. **tests**
 Модули для тестирования приложения. unit тесты и интеграционные тесты.
-5. **docs**
-Документация.
 
 ## Формат вывода
 ОБЯЗАТЕЛЬНО выдай ответ в виде JSON где ключи - путь до директории (НЕ ФАЙЛА!), а значения - результат классификации
 с указанием класса.
-Не добавляй свои рассуждения!
+
+**Пример ответа**:
+PROJECT:
+{{
+    ".": ["services.py"],
+    "alembic/api": ["alembic.py", "env.py"],
+    "runners": ["cli.py"],
+}}
+Твой ответ:
+```json
+{{
+    ".": "core",
+    "alembic/api": "adapters",
+    "runners": "composite"
+}}
+```
 
 Формат вывода:
 ```json
@@ -70,13 +84,7 @@ class LayerClassifier:
 
 
 if __name__ == "__main__":
-    from langchain_openai import ChatOpenAI
-
-    llm = ChatOpenAI(
-        model="Qwen/Qwen2.5-Coder-32B-Instruct",
-        api_key="U3NKiHbEzT2Fcqyb0X5OWQyTFDIcFQbV",
-        base_url="https://api.deepinfra.com/v1/openai",
-    )
+    llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
 
     classifier = LayerClassifier(llm, LAYER_CLASSIFIER_PROMPT, StrOutputParser())
     project_structure = FilesParser().invoke(DATA_PATH)
