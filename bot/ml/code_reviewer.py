@@ -3,14 +3,14 @@ from pathlib import Path
 
 from layer_classifier import LayerClassifier 
 from files_parser import FilesParser
-from code_analyzer import CodeAnalyzer, CodeAnalyzerCommentResult
-from logging_checker import LoggingChecker, ListLoggingCheckerOutput
+from code_analyzer import CodeAnalyzer
+from logging_checker import LoggingChecker
 from reqs_match import ReqsMatcher
 from schemas import OutputJson, ProjectComment, CodeComment
 
 
-#DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master\alembic"
-DATA_PATH = r'/home/artem/work/programming/codereview_hack/example_projects/python/backend-master/backend-master'
+DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master"
+# DATA_PATH = r'/home/artem/work/programming/codereview_hack/example_projects/python/backend-master/backend-master'
 
 
 type_to_title = {
@@ -82,7 +82,7 @@ class CodeReviewer:
         project_structure = {k: project_structure[k] for k in classes}
         scripts = [(path / x, classes[path]) for path in project_structure for x in project_structure[path]]
         code_comments = []
-        with ThreadPoolExecutor(max_workers=10) as executor:
+        with ThreadPoolExecutor(max_workers=5) as executor:
             future_to_sc = {executor.submit(self._process_py_file, source_dir, script[0], script[1]): script[0]
                             for script in scripts}
             for future in as_completed(future_to_sc):
@@ -97,7 +97,7 @@ class CodeReviewer:
 
 if __name__ == "__main__":
     from llms import LLMFactory
-    llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
+    llm = LLMFactory.get_llm("mistral-nemo-instruct-2407")
 
     reviewer = CodeReviewer(FilesParser(), LayerClassifier(llm), ReqsMatcher(),
                             scripts_validators=[CodeAnalyzer(llm), LoggingChecker(llm)])
