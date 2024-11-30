@@ -34,17 +34,66 @@ def list_files_in_directory(path):
         print(f"Путь {path} не существует или это не директория")
 
 
+json = {
+    "titles": ["Архитектурные ошибки", "Логирование", "Недопустимые зависимости"],
+    "code_comments": [
+        {
+            "title": "Архитектурные ошибки",
+            "start_string_number": 20,
+            "end_string_number": 80,
+            "filepath": "versions/06a043f2516a_initial.py",
+            "comment": "Этот код создает таблицы в базе данных, что является задачей слоя adapters. Однако, код также определяет структуру таблиц, что является задачей слоя core. Рекомендуется перенести определение структуры таблиц в слой core, а в слой adapters оставить только код создания/удаления таблиц.",
+            "suggestion": None,
+        },
+        {
+            "title": "Архитектурные ошибки",
+            "start_string_number": 4,
+            "end_string_number": 6,
+            "filepath": "env.py",
+            "comment": "Эти импорты не относятся к слою composite, их нужно перенести в слой core или adapters в зависимости от того, к чему они относятся.",
+            "suggestion": None,
+        },
+        {
+            "title": "Архитектурные ошибки",
+            "start_string_number": 8,
+            "end_string_number": 9,
+            "filepath": "env.py",
+            "comment": "Эти строки не относятся к слою composite, их нужно перенести в слой core.",
+            "suggestion": None,
+        },
+        {
+            "title": "Архитектурные ошибки",
+            "start_string_number": 11,
+            "end_string_number": 15,
+            "filepath": "env.py",
+            "comment": "Этот участок кода относится к слою composite, но он может быть вынесен в отдельный сервис в слое core, чтобы следовать принципу единственной ответственности.",
+            "suggestion": None,
+        },
+        {
+            "title": "Логирование",
+            "start_string_number": 12,
+            "end_string_number": 12,
+            "filepath": "env.py",
+            "comment": "Использование print",
+            "suggestion": "```python\nlogger = logging.getLogger(__name__)\nlogger.info('This is an info log message', extra={'key': 'value'})\n```",
+        },
+    ],
+    "project_comments": [
+        {
+            "title": "Недопустимые зависимости",
+            "comment": "В проекте найдены зависимости, выходящие за рамки стандартных инструментов и библиотек. Просьба согласовать следующие зависимости с лидером направления backend разработки:\n  - freenit\n",
+        }
+    ],
+}
+
+
 async def get_ml_response(path: str, language: str) -> OutputJson:
     print(language)
     list_files_in_directory(path)
-    code_comments = [
-        create_code_comment(x, i) for x in range(1, 5) for i in range(1, 4)
-    ]
+    # code_comments = [
+    #     create_code_comment(x, i) for x in range(1, 5) for i in range(1, 4)
+    # ]
 
-    project_comments = [create_project_comment(x) for x in range(1, 5)]
+    # project_comments = [create_project_comment(x) for x in range(1, 5)]
 
-    return OutputJson(
-        titles=["Раздел 1", "Раздел 2", "Раздел 3", "Раздел 4"],
-        code_comments=code_comments,
-        project_comments=project_comments,
-    )
+    return OutputJson(**json)

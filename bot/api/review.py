@@ -6,7 +6,7 @@ from database import Report, Session
 from fastapi import APIRouter, HTTPException, Response, UploadFile, status
 from fastapi.responses import FileResponse
 from schemas.review import ReviewSchema, UploadFileReponseSchema
-from services.review import create_report, determine_language, handle_file
+from services.review import determine_language, handle_file
 from settings.settings import bot_settings
 from sqlalchemy import select
 
@@ -23,10 +23,9 @@ async def upload_file(
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 
     with tempfile.TemporaryDirectory() as tmpdirname:
-        pdf, language, response = await handle_file(
+        pdf, language, response, report = await handle_file(
             BytesIO(await file.read()), is_file, file.filename, tmpdirname
         )
-        report = create_report(response, tmpdirname, pdf)
 
     session.add(report)
     await session.commit()

@@ -9,6 +9,7 @@ class BotSettings(BaseSettings):
     SECRET_KEY: SecretStr = Field(..., env="SECRET_KEY")
     ADMIN_USERNAME: str
     ADMIN_PASSWORD: SecretStr = Field(..., env="ADMIN_PASSWORD")
+    TOTAL_LINES_UP_DOWN: int
     TOKEN: SecretStr = Field(..., env="TOKEN")
     BASE_API_URL: str
     ALLOWED_LANGUAGES: list[str]

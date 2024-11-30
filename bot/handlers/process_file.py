@@ -1,15 +1,11 @@
 import tempfile
 from io import BytesIO
 
+import pdfkit
 from aiogram import Bot, F, Router, types
-from aiogram.types import ContentType
+from aiogram.types import ContentType, FSInputFile
 from database.connection import PostgresConnection
-from services.review import (
-    _create_pdf_from_template,
-    create_report,
-    determine_language,
-    handle_file,
-)
+from services.review import determine_language, handle_file
 from settings.settings import bot_settings
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -35,29 +31,28 @@ async def handle_document(
 
     is_file = determine_language(document.file_name) in bot_settings.ALLOWED_LANGUAGES
     if document.file_name.endswith("zip") or is_file:
-        try:
-            file_bytes = await download_document(bot, document.file_id)
-            with tempfile.TemporaryDirectory() as tmpdirname:
-                await message.answer(
-                    "Вы успешно загрузили файл! Пожалуйста, подождите несколько минут, пока я его не обработаю"
-                )
-                pdf, language, response = await handle_file(
-                    file_bytes, is_file, document.file_name, tmpdirname
-                )
+        # try:
+        file_bytes = await download_document(bot, document.file_id)
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            await message.answer(
+                "Вы успешно загрузили файл! Пожалуйста, подождите несколько минут, пока я его не обработаю"
+            )
+            pdf, language, response, report = await handle_file(
+                file_bytes, is_file, document.file_name, tmpdirname
+            )
 
-                report = create_report(response, tmpdirname, pdf)
-                repord_link = f"{bot_settings.BASE_API_URL}/api/review/{report.id}"
+            repord_link = f"{bot_settings.BASE_API_URL}/api/review/{report.id}"
 
-                async with AsyncSession(session.engine) as async_session:
-                    async_session.add(report)
-                    await async_session.commit()
+            async with AsyncSession(session.engine) as async_session:
+                async_session.add(report)
+                await async_session.commit()
 
-                await message.answer_document(pdf)
-                # await message.answer(str(response.model_dump()))
-                await message.answer(repord_link)
+            await message.answer_document(pdf)
+            # await message.answer(str(response.model_dump()))
+            await message.answer(repord_link)
 
-        except Exception as e:
-            await message.reply(f"Ошибка при конвертации")
+        # except Exception as e:
+        #     await message.reply(f"Ошибка при конвертации")
     elif document.file_name.endswith("html"):
         file_bytes = await download_document(bot, document.file_id)
         with tempfile.TemporaryDirectory() as tmpdirname:
@@ -65,7 +60,8 @@ async def handle_document(
                 f.write(file_bytes.read())
 
             pdf_path = f"{tmpdirname}/report.pdf"
-            pdf = await _create_pdf_from_template(1, pdf_path, f"{tmpdirname}/1.html")
+            pdfkit.from_file(f"{tmpdirname}/1.html", pdf_path)
+            pdf = FSInputFile(pdf_path)
 
             await message.answer_document(pdf)
     else:

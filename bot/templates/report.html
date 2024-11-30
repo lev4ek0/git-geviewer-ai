@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Отчёт по репозиторию: name</title>
+    <title>Отчёт по репозиторию: {{ name }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
@@ -218,7 +218,7 @@
         </svg>
       </div>
       <!--header-->
-      <h1 class="bold">Анализ проекта Evraz-landing от 01.02.2024</h1>
+      <h1 class="bold">Анализ проекта {{ name }} от {{ date }}</h1>
       <!--date-->
       <div class="flex align-center" style="margin-top: 4px">
         <svg width="14px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -231,7 +231,7 @@
             fill="#00141F66"
           />
         </svg>
-        <p class="subtext">Дата последнего изменения проекта: 01.02.2024</p>
+        <p class="subtext">Дата последнего изменения проекта: {{ date }}</p>
       </div>
       <!--overview-->
       <div class="overview">
@@ -263,6 +263,8 @@
       </div>
       <!--comments container-->
       <div class="flex column">
+        {% for title_info in title_infos %}
+        {% if title_info %}
         <h3 class="flex align-center">
           <span class="flex align-center" style="margin-right: 4px"
             ><svg
@@ -275,9 +277,12 @@
               <path
                 d="M2,3v18c0,0.6,0.4,1,1,1h5V2H3C2.4,2,2,2.4,2,3z M21,2H10v20h11c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z"
               /></svg></span
-          >${el.title}
+          >{{ title_info[0] }}
         </h3>
+        {% endif %}
+        {% if title_info[1] %}
         <div class="comment-container flex">
+          {% for title_project_comment in title_info[1] %}
           <div style="width: 24px; margin-right: 8px">
             <svg
               class="w-6 h-6 text-gray-800 dark:text-white"
@@ -297,8 +302,11 @@
               />
             </svg>
           </div>
-          <p style="margin-top: 2px">${e.comment}</p>
+          <p style="margin-top: 2px">{{ title_project_comment }}</p>
+          {% endfor %}
         </div>
+        {% endif %}
+        {% for title_code_comment in title_info[2] %}
         <div class="flex column comment-code">
           <div class="flex align-center" style="margin-bottom: 24px">
             <svg
@@ -317,7 +325,7 @@
                 d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"
               />
             </svg>
-            <p class="medium">..${e.filepath}</p>
+            <p class="medium">{{ title_code_comment[0] }}</p>
           </div>
           <div class="comment-container-blue flex">
             <div style="width: 24px; margin-right: 8px">
@@ -339,23 +347,21 @@
                 />
               </svg>
             </div>
-            <p style="margin-top: 2px">${e.comment}</p>
+            <p style="margin-top: 2px">{{ title_code_comment[1] }}</p>
           </div>
           <div class="code">
-            <pre class="prettyprint lang-py linenums:{{  }}" style="white-space: pre-line">
-    			{e.suggestion} # сделать реплейс, исходник
-      	  </pre
-            >
+            <pre class="prettyprint lang-py linenums:{{ title_code_comment[4] }}" style="white-space: pre-line">{{ title_code_comment[2] }}</pre>
           </div>
+          {% if title_code_comment[3] %}
           <p>Предложенные изменения</p>
           <div class="code-green">
-            <pre class="prettyprint lang-py linenums:${e.start_string_number}" style="white-space: pre-line">
-    			{e.suggestion} # сделать реплейс
-      	  </pre
-            >
+            <pre class="prettyprint lang-py linenums:1" style="white-space: pre-line">{{ title_code_comment[3] }}</pre>
           </div>
+          {% endif %}
         </div>
+        {% endfor %}
       </div>
+      {% endfor %}
     </main>
   </body>
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
