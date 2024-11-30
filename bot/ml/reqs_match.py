@@ -1,4 +1,5 @@
 import pipreqs.pipreqs
+from pydantic import BaseModel, Field
 
 ALLOWED_DEPS = [
     {"name": "falcon", "version": "~=3.0.0"},
@@ -34,6 +35,11 @@ NOT_MATCHED_TEMPALTE = "В проекте найдены зависимости,
 Просьба согласовать следующие зависимости с лидером направления backend разработки:\n{reqs}"
 
 
+class ReqsMatcherResult(BaseModel):
+    type: str = Field(default="reqs_match")
+    comment: str
+
+
 class ReqsMatcher:
     def __init__(
         self,
@@ -43,7 +49,7 @@ class ReqsMatcher:
         self.message_template = message_template
         self.allowed_deps = allowed_deps
 
-    def invoke(self, project_path: str) -> str | None:
+    def invoke(self, project_path: str) -> ReqsMatcherResult | None:
         imps = pipreqs.pipreqs.get_all_imports(project_path)
 
         project_lib_names = set(imps)
@@ -57,7 +63,7 @@ class ReqsMatcher:
             for dep in sorted(disallowed_dependencies):
                 reqs += f"  - {dep}\n"
 
-            result = NOT_MATCHED_TEMPALTE.format(reqs=reqs)
+            result = ReqsMatcherResult(comment=NOT_MATCHED_TEMPALTE.format(reqs=reqs))
             return result
 
         else:
