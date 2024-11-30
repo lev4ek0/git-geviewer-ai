@@ -51,9 +51,10 @@ class ReqsMatcher:
 
     def invoke(self, project_path: str) -> ReqsMatcherResult | None:
         imps = pipreqs.pipreqs.get_all_imports(project_path)
+        imps = pipreqs.pipreqs.get_pkg_names(imps)
 
-        project_lib_names = set(imps)
-        allowed_lib_names = {i["name"] for i in self.allowed_deps}
+        project_lib_names = {i.lower() for i in imps}
+        allowed_lib_names = {i["name"].lower() for i in self.allowed_deps}
 
         disallowed_dependencies = project_lib_names - allowed_lib_names
 
@@ -72,7 +73,7 @@ class ReqsMatcher:
 
 if __name__ == "__main__":
 
-    project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/http-api-3.1"
+    project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/backend-master/backend-master"
 
     node = ReqsMatcher()
     result = node.invoke(project_path)
