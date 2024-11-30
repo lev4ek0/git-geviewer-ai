@@ -41,6 +41,11 @@ class LLMFactory:
                 model="qwen2.5-coder:7b",
                 temperature=0,
             )
+        elif llm_name == "qwen2.5-coder:32b":
+            return ChatOllama(
+                model="qwen2.5-coder:32b",
+                temperature=0,
+            )
         elif llm_name == "chatgpt":
             return ChatOpenAI(
                 model="gpt-4o",

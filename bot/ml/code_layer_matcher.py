@@ -3,8 +3,10 @@ import os
 from pydantic import BaseModel, Field
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser, PydanticOutputParser
+from langchain_core.exceptions import OutputParserException
 
 import utils
+from llms import LLMFactory
 
 
 class CodeLayerMatchComment(BaseModel):
@@ -73,35 +75,35 @@ class CodeLayerMatcher:
 
         tree_generator = utils.DirectoryTreeGenerator(project_path)
         tree_str = tree_generator.get_tree()
-
-        ai_msg = self._chain.invoke(
-            {
-                "format_instructions": CodeLayerMatchResult.model_json_schema(),
-                # "project_tree": tree_str,
-                "project_tree": "",
-                "file_path": file_relative_path,
-                "layer_name": layer_name,
-                "file_content": file_content,
-            }
-        )
-
+        
+        try:
+            ai_msg = self._chain.invoke(
+                {
+                    "format_instructions": CodeLayerMatchResult.model_json_schema(),
+                    # "project_tree": tree_str,
+                    "project_tree": "",
+                    "file_path": file_relative_path,
+                    "layer_name": layer_name,
+                    "file_content": file_content,
+                }
+            )
+        except OutputParserException:
+            ai_msg = CodeLayerMatchResult(comments=[])
+        
         return ai_msg
 
 
 if __name__ == "__main__":
 
-    from langchain_openai import ChatOpenAI
+    llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
 
-    llm = ChatOpenAI(
-        model="Qwen/Qwen2.5-Coder-32B-Instruct",
-        # api_key="U3NKiHbEzT2Fcqyb0X5OWQyTFDIcFQbV",
-        api_key="76FMVfphK8pxO6WokuKGdTxusbysVG8Z",
-        base_url="https://api.deepinfra.com/v1/openai",
-    )
+    # project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/gramps-web-api-master/"
+    # layer_name = "core"
+    # file_path = "gramps_webapi/api/emails.py"
 
-    project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/gramps-web-api-master/"
-    layer_name = "core"
-    file_path = "gramps_webapi/api/emails.py"
+    project_path = "/home/artem/work/programming/codereview_hack/example_projects/python/donna-backend-master/donna-backend-master"
+    layer_name = "adapters"
+    file_path = "app/services/user_services.py"
 
     node = CodeLayerMatcher(llm)
     result = node.invoke(project_path, layer_name, file_path)
