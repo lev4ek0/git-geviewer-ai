@@ -9,6 +9,7 @@ from aiogram.fsm.storage.redis import RedisStorage
 from api import review_router
 from database import engine, postgres_connection, redis_connection
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from handlers import router as all_routers
 from prometheus_client import start_http_server
 from settings import bot_settings, redis_settings
@@ -24,6 +25,13 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 admin = MyAdmin(
     app, engine, base_url="/admin-auth", authentication_backend=admin_auth_backend

@@ -7,10 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
-	
+
     <style>
       * {
         box-sizing: border-box;
+      }
+      html {
+        margin: 0;
+        padding: 0;
       }
       body {
         font-family: Roboto;
@@ -36,6 +40,16 @@
         font-weight: 300;
         font-size: 14px;
         margin-bottom: 4px;
+      }
+      li.L0,
+      li.L1,
+      li.L2,
+      li.L3,
+      li.L5,
+      li.L6,
+      li.L7,
+      li.L8 {
+        list-style-type: decimal !important;
       }
       .bold {
         font-weight: 600;
@@ -78,10 +92,11 @@
         color: #00141f66;
       }
       .comment-container {
+        page-break-inside: avoid !important;
         background: #f5fcff;
         padding: 16px;
-		width: fit-content;
-		margin-bottom: 16px;
+        width: fit-content;
+        margin-bottom: 16px;
         position: relative;
         border-radius: 24px;
       }
@@ -99,16 +114,18 @@
       }
       .overview {
         margin: 16px 0;
-		margin-top: 24px;
+        margin-top: 24px;
       }
       .comment-code {
+        page-break-inside: avoid !important;
         background: #f5fcff;
         padding: 16px;
         border-radius: 24px;
-		margin-bottom: 16px;
+        margin-bottom: 16px;
       }
       .comment-container-blue {
-		width: fit-content;
+        page-break-inside: avoid !important;
+        width: fit-content;
         background: #c3e6f7;
         padding: 16px;
         position: relative;
@@ -147,9 +164,20 @@
         line-height: 16px;
         color: #00141f;
       }
-	  .prettyprint.prettyprinted {
-		border: none!important;
-	  }
+      .l1,
+      .l1,
+      .l3,
+      .l4,
+      .l5,
+      .l6,
+      .l7,
+      .l8 {
+        tab-size: 4;
+      }
+      .prettyprint.prettyprinted {
+        border: none !important;
+        tab-size: 4 !important;
+      }
     </style>
   </head>
   <body>
@@ -157,22 +185,38 @@
       <!--logo-->
       <div class="logo">
         <svg width="120" height="32" viewBox="0 0 206 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<g clip-path="url(#clip0_37_1386)">
-			<path d="M32.1851 0.000999451H0V6.39807H32.1851V0.000999451Z" fill="#FBB92F"/>
-			<path d="M32.1851 12.7942H0V19.1913H32.1851V12.7942Z" fill="#EE7918"/>
-			<path d="M32.1851 25.5884H0V31.9856H32.1851V25.5884Z" fill="#E42213"/>
-			<path d="M157.256 6.40314L162.34 19.1848H152.158L157.256 6.40314ZM152.324 0.00362396L139.968 31.9891H147.347L149.764 25.5777L164.749 25.584L167.165 31.9891H174.504L161.431 0.00362396H152.324Z" fill="black"/>
-			<path d="M45.0557 0.00362396V31.9891H71.4619V25.5961L51.5107 25.585V19.1918H71.4619V12.7823H51.5107V6.40538L71.4619 6.38395V0.00362396H45.0557Z" fill="black"/>
-			<path d="M178.965 31.9637H191.445H196.398C201.596 31.9637 205.999 28.452 205.999 22.4698C205.999 20.0042 205.047 17.585 202.077 15.9837C205.515 13.9952 205.999 11.9632 205.999 9.49766C205.999 4.29389 201.596 0.00362396 196.398 0.00362396H191.445H178.965V6.50849H196.098C197.847 6.50849 199.264 7.91719 199.264 9.65494C199.264 11.3927 197.847 12.8015 196.098 12.8015H192.677H182.175V19.1658H192.677H196.098C197.847 19.1658 199.264 20.5746 199.264 22.3123C199.264 24.05 197.847 25.4588 196.098 25.4588H178.965V31.9637H178.965Z" fill="black"/>
-			<path d="M131.067 0.00362396H126.114H113.313V31.9891H119.753V19.1659H127.347H131.067C136.392 19.1659 140.708 14.8763 140.708 9.58478C140.708 4.29325 136.392 0.00362396 131.067 0.00362396ZM130.767 12.8015H119.744V6.50849H130.767C132.516 6.50849 133.933 7.91719 133.933 9.65494C133.933 11.3927 132.516 12.8015 130.767 12.8015Z" fill="black"/>
-			<path d="M102.485 15.9837C105.923 13.9952 106.407 11.9632 106.407 9.49766C106.407 4.29389 102.003 0.00362396 96.8054 0.00362396L96.8056 0.00373059C96.8041 0.00373059 96.8029 0.00362396 96.8015 0.00362396H79.2079V31.9637H97.1233C102.321 31.9637 106.725 28.452 106.725 22.4698C106.725 20.0042 105.455 17.5851 102.485 15.9837ZM85.6394 6.50849H96.5016C98.2502 6.50849 99.6676 7.91719 99.6676 9.65494C99.6676 11.3927 98.2502 12.8015 96.5016 12.8015H93.2417H85.6394V6.50849ZM96.8235 25.4588H85.6394V19.1658H96.8234C98.5721 19.1658 99.9895 20.5746 99.9895 22.3123C99.9895 24.05 98.5721 25.4588 96.8235 25.4588Z" fill="black"/>
-			</g>
-			<defs>
-			<clipPath id="clip0_37_1386">
-			<rect width="206" height="32" fill="white"/>
-			</clipPath>
-			</defs>
-		</svg>			
+          <g clip-path="url(#clip0_37_1386)">
+            <path d="M32.1851 0.000999451H0V6.39807H32.1851V0.000999451Z" fill="#FBB92F" />
+            <path d="M32.1851 12.7942H0V19.1913H32.1851V12.7942Z" fill="#EE7918" />
+            <path d="M32.1851 25.5884H0V31.9856H32.1851V25.5884Z" fill="#E42213" />
+            <path
+              d="M157.256 6.40314L162.34 19.1848H152.158L157.256 6.40314ZM152.324 0.00362396L139.968 31.9891H147.347L149.764 25.5777L164.749 25.584L167.165 31.9891H174.504L161.431 0.00362396H152.324Z"
+              fill="black"
+            />
+            <path
+              d="M45.0557 0.00362396V31.9891H71.4619V25.5961L51.5107 25.585V19.1918H71.4619V12.7823H51.5107V6.40538L71.4619 6.38395V0.00362396H45.0557Z"
+              fill="black"
+            />
+            <path
+              d="M178.965 31.9637H191.445H196.398C201.596 31.9637 205.999 28.452 205.999 22.4698C205.999 20.0042 205.047 17.585 202.077 15.9837C205.515 13.9952 205.999 11.9632 205.999 9.49766C205.999 4.29389 201.596 0.00362396 196.398 0.00362396H191.445H178.965V6.50849H196.098C197.847 6.50849 199.264 7.91719 199.264 9.65494C199.264 11.3927 197.847 12.8015 196.098 12.8015H192.677H182.175V19.1658H192.677H196.098C197.847 19.1658 199.264 20.5746 199.264 22.3123C199.264 24.05 197.847 25.4588 196.098 25.4588H178.965V31.9637H178.965Z"
+              fill="black"
+            />
+            <path
+              d="M131.067 0.00362396H126.114H113.313V31.9891H119.753V19.1659H127.347H131.067C136.392 19.1659 140.708 14.8763 140.708 9.58478C140.708 4.29325 136.392 0.00362396 131.067 0.00362396ZM130.767 12.8015H119.744V6.50849H130.767C132.516 6.50849 133.933 7.91719 133.933 9.65494C133.933 11.3927 132.516 12.8015 130.767 12.8015Z"
+              fill="black"
+            />
+            <path
+              d="M102.485 15.9837C105.923 13.9952 106.407 11.9632 106.407 9.49766C106.407 4.29389 102.003 0.00362396 96.8054 0.00362396L96.8056 0.00373059C96.8041 0.00373059 96.8029 0.00362396 96.8015 0.00362396H79.2079V31.9637H97.1233C102.321 31.9637 106.725 28.452 106.725 22.4698C106.725 20.0042 105.455 17.5851 102.485 15.9837ZM85.6394 6.50849H96.5016C98.2502 6.50849 99.6676 7.91719 99.6676 9.65494C99.6676 11.3927 98.2502 12.8015 96.5016 12.8015H93.2417H85.6394V6.50849ZM96.8235 25.4588H85.6394V19.1658H96.8234C98.5721 19.1658 99.9895 20.5746 99.9895 22.3123C99.9895 24.05 98.5721 25.4588 96.8235 25.4588Z"
+              fill="black"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_37_1386">
+              <rect width="206" height="32" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
       <!--header-->
       <h1 class="bold">Анализ проекта Evraz-landing от 01.02.2024</h1>
       <!--date-->
@@ -207,19 +251,32 @@
               clip-rule="evenodd"
             />
           </svg>
-          <p class="medium">Замечаний: <span class="bold">5555</span></p>
+          <p class="medium">Замечаний: <span class="bold" id="total"> {{ total_remarks }} </span></p>
         </div>
         <div>
-          <ul>
-            <li>Архитектурные особенности: <span class="medium">41</span></li>
-            <li>Архитектурные особенности: <span class="medium">2</span></li>
-            <li>Архитектурные особенности: <span class="medium">3</span></li>
+          <ul id="overview-list">
+            {% for title_remark in title_remarks %}
+            <li>{{ title_remark[0] }}: <span class="medium">{{ title_remark[1] }}</span></li>
+            {% endfor %}
           </ul>
         </div>
       </div>
       <!--comments container-->
       <div class="flex column">
-        <h3>Архитектурные особенности</h3>
+        <h3 class="flex align-center">
+          <span class="flex align-center" style="margin-right: 4px"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#000000"
+              width="24px"
+              viewBox="0 0 24 24"
+              enable-background="new 0 0 24 24"
+            >
+              <path
+                d="M2,3v18c0,0.6,0.4,1,1,1h5V2H3C2.4,2,2,2.4,2,3z M21,2H10v20h11c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z"
+              /></svg></span
+          >${el.title}
+        </h3>
         <div class="comment-container flex">
           <div style="width: 24px; margin-right: 8px">
             <svg
@@ -240,35 +297,8 @@
               />
             </svg>
           </div>
-          <p style="margin-top: 2px">
-            Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
-          </p>
+          <p style="margin-top: 2px">${e.comment}</p>
         </div>
-        <div class="comment-container flex">
-          <div style="width: 24px; margin-right: 8px">
-            <svg
-              class="w-6 h-6 text-gray-800 dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="#00141f"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-              />
-            </svg>
-          </div>
-          <p style="margin-top: 2px">
-            Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
-          </p>
-        </div>
-        <!--comment with code-->
         <div class="flex column comment-code">
           <div class="flex align-center" style="margin-bottom: 24px">
             <svg
@@ -287,7 +317,7 @@
                 d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"
               />
             </svg>
-            <p class="medium">../src/File/File.tsx</p>
+            <p class="medium">..${e.filepath}</p>
           </div>
           <div class="comment-container-blue flex">
             <div style="width: 24px; margin-right: 8px">
@@ -309,102 +339,22 @@
                 />
               </svg>
             </div>
-            <p style="margin-top: 2px">
-              Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
-            </p>
+            <p style="margin-top: 2px">${e.comment}</p>
           </div>
-          <div class="code">kodkodkodkodkodkodkodkod</div>
-		  <p>Предложенные изменения</p>
-          <div class="code-green"><code class="prettyprint" style="white-space: pre-line">
-			from pydantic import BaseModel, Field
-
-
-			class CodeComment(BaseModel):
-    			title: str = Field(description="Название раздела")
-    			start_string_number: int = Field(description="Номер строки (начало)")
-    			end_string_number: int = Field(description="Номер строки (конец)")
-    			filepath: str = Field(description="Путь до файла")
-    			comment: str = Field(description="Комментарий к участку кода")
-    			suggestion: str = Field(description="Рекомендации по исправлению", default=None)
-
-
-			class ProjectComment(BaseModel):
-    			title: str = Field(description="Название раздела")
-    			comment: str = Field(description="Комментарий")
-
-
-			class OutputJson(BaseModel):
-    			titles: list[str] = Field(description="Список возможных разделов, к которым относятся комментарии")
-    			code_comments: list[CodeComment]
-    			project_comments: list[ProjectComment]
-			</code>
-			</div>
+          <div class="code">
+            <pre class="prettyprint lang-py linenums:{{  }}" style="white-space: pre-line">
+    			{e.suggestion} # сделать реплейс, исходник
+      	  </pre
+            >
+          </div>
+          <p>Предложенные изменения</p>
+          <div class="code-green">
+            <pre class="prettyprint lang-py linenums:${e.start_string_number}" style="white-space: pre-line">
+    			{e.suggestion} # сделать реплейс
+      	  </pre
+            >
+          </div>
         </div>
-		<div class="flex column comment-code">
-			<div class="flex align-center" style="margin-bottom: 24px">
-			  <svg
-				class="w-6 h-6 text-gray-800 dark:text-white"
-				aria-hidden="true"
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				fill="none"
-				viewBox="0 0 24 24"
-			  >
-				<path
-				  stroke="currentColor"
-				  stroke-linejoin="round"
-				  stroke-width="2"
-				  d="M10 3v4a1 1 0 0 1-1 1H5m14-4v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"
-				/>
-			  </svg>
-			  <p class="medium">../src/File/File.tsx</p>
-			</div>
-			<div class="comment-container-blue flex">
-			  <div style="width: 24px; margin-right: 8px">
-				<svg
-				  class="w-6 h-6 text-gray-800 dark:text-white"
-				  aria-hidden="true"
-				  xmlns="http://www.w3.org/2000/svg"
-				  width="24"
-				  height="24"
-				  fill="none"
-				  viewBox="0 0 24 24"
-				>
-				  <path
-					stroke="#00141f"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-				  />
-				</svg>
-			  </div>
-			  <p style="margin-top: 2px">
-				Необходимо вынести в слой адаптеров, работать через репозитории и интерфейсы из сервисов
-			  </p>
-			</div>
-			<div class="code">kodkodkodkodkodkodkodkod</div>
-			<p>Предложенные изменения</p>
-			<div class="code-green"><code class="prettyprint" style="white-space: pre-line">
-				import { FC } from 'react';
-				import { BrowserRouter, Route, Routes } from 'react-router-dom';
-				import { AppRoutes } from './routes';
-				import Home from '@pages/Home/Home';
-				
-				export const AppRouter: FC = () => {
-				  return (
-					<BrowserRouter>
-					  <Routes>
-						<Route path={AppRoutes.Home} element={<Home />}></Route>
-					  </Routes>
-					</BrowserRouter>
-				  );
-				};
-				
-			  </code>
-			  </div>
-		  </div>
       </div>
     </main>
   </body>

@@ -35,6 +35,7 @@ def list_files_in_directory(path):
 
 
 async def get_ml_response(path: str, language: str) -> OutputJson:
+    print(language)
     list_files_in_directory(path)
     code_comments = [
         create_code_comment(x, i) for x in range(1, 5) for i in range(1, 4)

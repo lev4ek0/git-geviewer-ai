@@ -1,20 +1,13 @@
-import shutil
 import tempfile
-from copy import deepcopy
 from io import BytesIO
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from database import Report, Session
 from fastapi import APIRouter, HTTPException, Response, UploadFile, status
 from fastapi.responses import FileResponse
-from ml.factory import list_files_in_directory
 from schemas.review import ReviewSchema, UploadFileReponseSchema
-from services.review import (
-    ALLOWED_LANGUAGES,
-    create_report,
-    determine_language,
-    handle_file,
-)
+from services.review import create_report, determine_language, handle_file
+from settings.settings import bot_settings
 from sqlalchemy import select
 
 router = APIRouter()
@@ -25,7 +18,7 @@ async def upload_file(
     file: UploadFile,
     session: Session,
 ) -> UploadFileReponseSchema:
-    is_file = determine_language(file.filename) in ALLOWED_LANGUAGES
+    is_file = determine_language(file.filename) in bot_settings.ALLOWED_LANGUAGES
     if not file.filename.endswith("zip") and not is_file:
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
 

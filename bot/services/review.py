@@ -9,8 +9,7 @@ import pdfkit
 from aiogram.types import FSInputFile
 from database import Report
 from ml.factory import OutputJson, get_ml_response
-
-ALLOWED_LANGUAGES = ("py", "cs", "ts")
+from settings.settings import bot_settings
 
 
 def determine_language(path: str):
@@ -25,12 +24,12 @@ def _unpack_zip_to_tmp(zip_bytes: BytesIO, tmpdirname: str):
     with zipfile.ZipFile(zip_bytes, "r") as zip_ref:
         zip_ref.extractall(tmpdirname)
 
-    languages = {lang: 0 for lang in ALLOWED_LANGUAGES}
+    languages = {lang: 0 for lang in bot_settings.ALLOWED_LANGUAGES}
     for root, _, files in os.walk(tmpdirname):
         for file in files:
             file_path = os.path.join(root, file)
             lang = determine_language(file_path)
-            if lang in ALLOWED_LANGUAGES:
+            if lang in bot_settings.ALLOWED_LANGUAGES:
                 languages[lang] += 1
 
     return max(languages, key=languages.get)

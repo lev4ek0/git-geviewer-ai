@@ -5,12 +5,12 @@ from aiogram import Bot, F, Router, types
 from aiogram.types import ContentType
 from database.connection import PostgresConnection
 from services.review import (
-    ALLOWED_LANGUAGES,
     _create_pdf_from_template,
     create_report,
     determine_language,
     handle_file,
 )
+from settings.settings import bot_settings
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = Router()
@@ -33,17 +33,20 @@ async def handle_document(
 ):
     document = message.document
 
-    is_file = determine_language(document.file_name) in ALLOWED_LANGUAGES
+    is_file = determine_language(document.file_name) in bot_settings.ALLOWED_LANGUAGES
     if document.file_name.endswith("zip") or is_file:
         try:
             file_bytes = await download_document(bot, document.file_id)
             with tempfile.TemporaryDirectory() as tmpdirname:
+                await message.answer(
+                    "Вы успешно загрузили файл! Пожалуйста, подождите несколько минут, пока я его не обработаю"
+                )
                 pdf, language, response = await handle_file(
                     file_bytes, is_file, document.file_name, tmpdirname
                 )
 
                 report = create_report(response, tmpdirname, pdf)
-                repord_link = f"https://lev-4-ek.ru/api/review/{report.id}"
+                repord_link = f"{bot_settings.BASE_API_URL}/api/review/{report.id}"
 
                 async with AsyncSession(session.engine) as async_session:
                     async_session.add(report)

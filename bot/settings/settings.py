@@ -10,6 +10,8 @@ class BotSettings(BaseSettings):
     ADMIN_USERNAME: str
     ADMIN_PASSWORD: SecretStr = Field(..., env="ADMIN_PASSWORD")
     TOKEN: SecretStr = Field(..., env="TOKEN")
+    BASE_API_URL: str
+    ALLOWED_LANGUAGES: list[str]
     WEBHOOK_HOST: str
     WEBHOOK_PATH: str
     WEBHOOK_URL: str
