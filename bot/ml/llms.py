@@ -26,6 +26,7 @@ class LLMFactory:
                 model="Qwen/Qwen2.5-Coder-32B-Instruct",
                 api_key=os.environ["QWEN_CODER_KEY"],
                 base_url="https://api.deepinfra.com/v1/openai",
+                temperature=0,
             )
         elif llm_name == "llama-3.1-70b-versatile":
             return ChatGroq(

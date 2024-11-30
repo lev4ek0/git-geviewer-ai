@@ -1,3 +1,4 @@
+from tenacity import retry, stop_after_attempt
 from pydantic import BaseModel, Field
 from typing import List, Dict
 from pathlib import Path
@@ -85,7 +86,8 @@ class LoggingChecker:
     def __init__(self, llm: BaseChatModel, prompt: str = LOGGING_CHECKER_PROMPT, parser: BaseOutputParser = JsonOutputParser(pydantic_object=ListLoggingCheckerOutput)):
         self._parser_instructions = parser.get_format_instructions()
         self._chain = PromptTemplate.from_template(prompt) | llm | parser
-
+    
+    @retry(stop=stop_after_attempt(3))
     def invoke(self, script_content: str):
         with_lines = add_line_numbers(script_content)
         llm_answer = self._chain.invoke({"script_content": with_lines, "format_instructions": ListLoggingCheckerOutput.model_json_schema()})

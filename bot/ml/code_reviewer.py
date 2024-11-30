@@ -9,7 +9,7 @@ from reqs_match import ReqsMatcher
 from schemas import OutputJson, ProjectComment, CodeComment
 
 
-DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master\alembic"
+DATA_PATH = r"D:\ITMO\hacks\llm_review\python\backend-master"
 
 
 type_to_title = {
@@ -59,16 +59,17 @@ class CodeReviewer:
                 result = validator.invoke(contents)
             results.append(result)
         
-        return self._postprocess_result(results, source_dir / relative_path)
+        return self._postprocess_result(results, relative_path)
 
-    def invoke(self, source_dir: Path):
+    def invoke(self, source_dir: Path, extension: str = ".py"):
         if isinstance(source_dir, str):
             source_dir = Path(source_dir)
 
         if source_dir.is_file():
-            return self._process_py_file(Path(""), source_dir)
+            result = self._process_py_file(Path(""), source_dir)
+            return OutputJson(titles=list(type_to_title.values()), code_comments=result, project_comments=[])
         
-        project_structure = self.files_parser.invoke(source_dir)
+        project_structure = self.files_parser.invoke(source_dir, extension=extension)
         reqs = self.reqs_matcher.invoke(source_dir)
         classes = self.layer_classifier.invoke(project_structure)
         project_comments = []
@@ -88,7 +89,6 @@ class CodeReviewer:
                     code_comments += data
                 except Exception as exc:
                     print(f'{script_name} сгенерировано исключение: {exc}')
-
         return OutputJson(titles=list(type_to_title.values()), code_comments=code_comments, project_comments=project_comments)
 
 
