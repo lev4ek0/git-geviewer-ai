@@ -20,6 +20,7 @@ class LLMFactory:
                 base_url=os.environ["EVRAZ_BASE_URL"],
                 api_key=os.environ["EVRAZ_GPT_KEY"],
                 model_name="mistral-nemo-instruct-2407",
+                temperature=0,
             )
         elif llm_name == "Qwen/Qwen2.5-Coder-32B-Instruct":
             return ChatOpenAI(

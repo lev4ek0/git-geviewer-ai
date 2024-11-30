@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from typing import List, Dict
 from pathlib import Path
 
-from langchain_core.output_parsers import BaseOutputParser, JsonOutputParser
+from langchain_core.output_parsers import BaseOutputParser, JsonOutputParser, PydanticOutputParser, StrOutputParser
 from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import PromptTemplate
 
@@ -11,7 +11,7 @@ from utils import add_line_numbers
 from llms import LLMFactory
 
 
-DATA_PATH = Path(r"D:\\ITMO\\hacks\\llm_review\\python\\backend-master\\alembic\\versions\\06a043f2516a_initial.py")
+DATA_PATH = Path(r"D:\ITMO\hacks\llm_review\python\backend-master\freenit\cli.py")
 
 
 class LoggingCheckerOutput(BaseModel):
@@ -75,10 +75,13 @@ datefmt = '%Y-%m-%d %H:%M:%S'
 
 ЗАПРЕЩЕНО ДУБЛИРОВАТЬ. Если в коде встречается несколько ошибок, то ты должен вывести их все в нужном формате.
 ВАЖНО! Если в коде не встречается никаких print и logging, то просто выводи comments пустым списком.
+Не добавляй своих комментарии и рассуждения!!!
 
 ## Приступим
 SCRIPT:
+```python
 {script_content}
+```
 Твой ответ:
 """
 
@@ -96,7 +99,7 @@ class LoggingChecker:
 
 
 if __name__ == "__main__":
-    llm = LLMFactory.get_llm("Qwen/Qwen2.5-Coder-32B-Instruct")
+    llm = LLMFactory.get_llm("mistral-nemo-instruct-2407")
 
     checker = LoggingChecker(llm)
     with open(DATA_PATH, "r", encoding="utf-8") as f:

@@ -68,7 +68,6 @@ class CodeReviewer:
         results = []
         for validator in self.scripts_validators:
             if isinstance(validator, CodeAnalyzer):
-
                 result = validator.invoke(contents, layer_name, str(relative_path))
             else:
                 result = validator.invoke(contents)
@@ -81,9 +80,13 @@ class CodeReviewer:
             source_dir = Path(source_dir)
 
         if source_dir.is_file():
-            result = self._process_py_file(Path(""), source_dir)
+            try:
+                result = self._process_py_file(Path(""), source_dir)
+                result = [x for x in result if x.title != "Архитектурные ошибки"]
+            except:
+                result = []
             return OutputJson(titles=list(type_to_title.values()), code_comments=result, project_comments=[])
-        
+
         project_structure = self.files_parser.invoke(source_dir, extension=extension)
         reqs = self.reqs_matcher.invoke(source_dir)
         classes = self.layer_classifier.invoke(project_structure)
@@ -128,8 +131,6 @@ class CodeReviewer:
             code_comments=code_comments,
             project_comments=project_comments,
         )
-                    print(f'{script_name} сгенерировано исключение: {exc}')
-        return OutputJson(titles=list(type_to_title.values()), code_comments=code_comments, project_comments=project_comments)
 
 
 if __name__ == "__main__":
@@ -143,7 +144,8 @@ if __name__ == "__main__":
         ReqsMatcher(),
         scripts_validators=[CodeAnalyzer(llm), LoggingChecker(llm)],
     )
-    result = reviewer.invoke(DATA_PATH)
+    EXTENSION = ".py"
+    result = reviewer.invoke(DATA_PATH, EXTENSION)
     print(result)
 
     with open("output1.json", "w", encoding="utf-8") as f:
